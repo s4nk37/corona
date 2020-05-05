@@ -25,10 +25,6 @@ class _ChooseLocationState extends State<ChooseLocation> {
     super.initState();
   }
 
-  void demoFun(String countryName) {
-    print(countryName + " Clicked!");
-  }
-
   List<Widget> contentWidgets = [
     new Container(
       alignment: Alignment.center,
@@ -109,6 +105,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
         onItemSelected: (item) {
           setState(() {
             print('$item');
+            Navigator.pop(context, item);
           });
         },
       ),
@@ -169,7 +166,6 @@ class _ChooseLocationState extends State<ChooseLocation> {
               '.png';
           myWidgets.add(new FlatButton(
               onPressed: () {
-                demoFun(widget.receivedData[j]['Country'].toString());
                 Navigator.pop(context, widget.receivedData[j]['Country'].toString());
               },
               child: new Card(

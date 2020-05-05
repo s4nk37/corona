@@ -18,6 +18,7 @@ class Home extends StatefulWidget {
 String formattedDate = DateFormat.yMMMMd().add_jm().format(DateTime.now());
 
 class _HomeState extends State<Home> {
+  var currentData = [];
   var globalData = ["0", "0", "0", "0", "0", "0", "0"];
   var globalDataKeys = [
     "Date",
@@ -42,6 +43,7 @@ class _HomeState extends State<Home> {
   }
 
   var countriesData;
+  bool defaultView = true;
 
   Future<String> getData() async {
 //    var response = await http.get(
@@ -74,6 +76,13 @@ class _HomeState extends State<Home> {
       countriesData = countries;
       print("type:::" + countriesData.runtimeType.toString());
       print("countries:::" + countries.length.toString());
+
+//      currentData = globalData;
+
+      for (var value in globalData) {
+        print(value);
+        currentData.add(value);
+      }
     });
 
     return "Success";
@@ -96,13 +105,15 @@ class _HomeState extends State<Home> {
     for (int i = 0; i < countriesData.length; i++) {
       if (countriesData[i]['Country'] == selectedCountry) {
         setState(() {
-          globalData[0] = countriesData[i]['Country'];
-          globalData[4] = countriesData[i]['TotalDeaths'].toString();
-          globalData[3] = countriesData[i]['NewDeaths'].toString();
-          globalData[2] = countriesData[i]['TotalConfirmed'].toString();
-          globalData[1] = countriesData[i]['NewConfirmed'].toString();
-          globalData[6] = countriesData[i]['TotalRecovered'].toString();
-          globalData[5] = countriesData[i]['NewRecovered'].toString();
+          currentData[0] = countriesData[i]['Country'];
+          currentData[4] = countriesData[i]['TotalDeaths'].toString();
+          currentData[3] = countriesData[i]['NewDeaths'].toString();
+          currentData[2] = countriesData[i]['TotalConfirmed'].toString();
+          currentData[1] = countriesData[i]['NewConfirmed'].toString();
+          currentData[6] = countriesData[i]['TotalRecovered'].toString();
+          currentData[5] = countriesData[i]['NewRecovered'].toString();
+
+          defaultView = !defaultView;
         });
         break;
       }
@@ -156,7 +167,7 @@ class _HomeState extends State<Home> {
                       height: 13.5,
                     ),
                     Text(
-                      globalData[0],
+                      currentData[0],
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 50,
@@ -213,7 +224,7 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               Text(
-                                globalData[4],
+                                currentData[4],
                                 style: TextStyle(
                                   fontSize: 30,
                                   color: const Color(0xFFFA5252),
@@ -240,7 +251,7 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               Text(
-                                globalData[3],
+                                currentData[3],
                                 style: TextStyle(
                                   fontSize: 30,
                                   color: const Color(0xFFFA5252),
@@ -372,7 +383,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    globalData[2],
+                                    currentData[2],
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: const Color(0xFFF000000),
@@ -393,7 +404,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    globalData[1],
+                                    currentData[1],
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: const Color(0xFFF000000),
@@ -426,7 +437,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    globalData[6],
+                                    currentData[6],
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: const Color(0xFF34C360),
@@ -447,7 +458,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    globalData[5],
+                                    currentData[5],
                                     style: TextStyle(
                                       fontSize: 30,
                                       color: const Color(0xFF34C360),
@@ -480,35 +491,51 @@ class _HomeState extends State<Home> {
                                     child: new Row(
                                       children: <Widget>[
                                         Visibility(
-                                          visible: false,
+                                          visible: defaultView,
                                           child: new Icon(Icons.search),
                                         ),
                                         Visibility(
                                             visible: true,
                                             child: Text(
-                                              globalData[0],
+                                              currentData[0],
                                               style: TextStyle(
                                                 fontSize: 25,
                                               ),
                                             )),
                                         Visibility(
-                                          visible: true,
+                                          visible: !defaultView,
                                           child: new Icon(Icons.backspace),
                                         ),
                                       ],
                                     ),
                                     onPressed: () async {
+                                      if (defaultView) {
 //                                      Navigator.push(context,MaterialPageRoute(builder: (context)=> ChooseLocation(countriesData)));
-                                      final selectedCountry =
-                                          await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChooseLocation(
-                                                          countriesData)));
-                                      print("selectedCountry:::" +
-                                          selectedCountry.toString());
-                                      changeValue(selectedCountry.toString());
+                                        final selectedCountry =
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChooseLocation(
+                                                            countriesData)));
+                                        print("selectedCountry:::" +
+                                            selectedCountry.toString());
+                                        changeValue(selectedCountry.toString());
+                                      } else {
+                                        setState(() {
+                                          defaultView = !defaultView;
+//                                          currentData = globalData;
+                                          currentData = [];
+                                          for (var value in globalData) {
+                                            currentData.add(value);
+                                          }
+                                          print("+---------------+");
+                                          print("current data:::" +
+                                              currentData.toString());
+                                          print("global data:::" +
+                                              globalData.toString());
+                                        });
+                                      }
                                     },
                                   )
                                 ],
