@@ -12,9 +12,9 @@ void main() => runApp(MaterialApp(
     primaryColor: const Color(0xFFFA5252),
   ),
   routes: {
-    // '/': (context) => Loading(),
+     '/': (context) => Loading(),
     '/home': (context) => Home(),
-    '/location': (context) => ChooseLocation(),
+//    '/location': (context) => ChooseLocation(),
   },
 
 ));
